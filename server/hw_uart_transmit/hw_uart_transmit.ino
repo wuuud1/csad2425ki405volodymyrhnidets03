@@ -2,7 +2,8 @@
 #define TXD1 17
 #define BAUD_RATE 115200
 
-bool promptPrinted = false; // Variable to track if the prompt was printed
+bool promptPrinted = false; // Variable to track if the prompt  printed
+
 
 void setup() {
   // Start communication on Serial Monitor (USB)
