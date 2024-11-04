@@ -24,7 +24,8 @@ jobs:
       - name: Install ESP32 Platform
         run: |
           arduino-cli core update-index
-          arduino-cli core install esp32:esp32@3.0.5
+          arduino-cli board listall
+          arduino-cli core install esp32:esp32
 
       - name: Verify Board Installation
         run: arduino-cli board listall
