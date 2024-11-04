@@ -1,0 +1,35 @@
+name: CI for ESP32
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  arduino:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+        with:
+          version: '0.19.2'
+
+      - name: Install Arduino AVR platform
+        run: arduino-cli core install arduino:avr
+
+      - name: Build Arduino Project
+        run: |
+          arduino-cli compile --fqbn arduino:avr:uno server/hw_uart_transmit/hw_uart_transmit.ino
+
+      - name: Upload Arduino Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: arduino-build
+          path: server/hw_uart_transmit/build/*
