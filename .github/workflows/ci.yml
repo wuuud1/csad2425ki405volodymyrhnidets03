@@ -20,11 +20,10 @@ jobs:
         uses: arduino/setup-arduino-cli@v1
         with:
           version: '0.19.2'
-
+          
+   
       - name: Install ESP32 Platform
         run: |
-          arduino-cli core update-index
-          arduino-cli board listall
           arduino-cli core install esp32:esp32
 
       - name: Verify Board Installation
