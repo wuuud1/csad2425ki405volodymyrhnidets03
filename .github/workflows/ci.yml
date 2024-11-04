@@ -21,15 +21,15 @@ jobs:
         with:
           version: '0.19.2'
 
-      - name: Install Arduino AVR platform
-        run: arduino-cli core install arduino:avr
+      - name: Install ESP32 platform
+        run: arduino-cli core install esp32:esp32
 
-      - name: Build Arduino Project
+      - name: Build ESP32 Project
         run: |
-          arduino-cli compile --fqbn arduino:avr:uno server/hw_uart_transmit/hw_uart_transmit.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32dev server/hw_uart_transmit/hw_uart_transmit.ino
 
-      - name: Upload Arduino Build Artifact
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: arduino-build
+          name: esp32-build
           path: server/hw_uart_transmit/build/*
