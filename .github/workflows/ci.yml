@@ -31,7 +31,7 @@ jobs:
 
       - name: Build ESP32 Project
         run: |
-          arduino-cli compile --fqbn arduino:esp32:nano_nora server/hw_uart_transmit/hw_uart_transmit.ino
+          arduino-cli compile --fqbn esp32:esp32:esp32 server/hw_uart_transmit/hw_uart_transmit.ino
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
