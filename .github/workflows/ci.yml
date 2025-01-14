@@ -1,0 +1,82 @@
+name: CI task2
+
+on:
+  push:
+    branches:
+      - feature/develop/task2
+  pull_request:
+    branches:
+      - feature/develop/task2
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore Client/Lab2csad/Lab2csad.sln
+
+    - name: Build solution
+      run: dotnet build Client/Lab2csad/Lab2csad.sln --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test Client/Lab2csad/InfrastructureTests/InfrastructureTests.csproj --logger "trx;LogFileName=test_results.trx" --results-directory ./TestResults --collect:"XPlat Code Coverage"
+
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: TestResults
+        path: ./TestResults
+
+    - name: Create binaries artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Binaries
+        path: |
+          **/bin/Release/
+
+  arduino-uno-r3-build:
+    runs-on: windows-latest
+    name: Arduino Uno R3 Build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Arduino CLI
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Path "$env:GITHUB_WORKSPACE\arduino-cli" -Force
+        Invoke-WebRequest -Uri "https://github.com/arduino/arduino-cli/releases/download/0.31.0/arduino-cli_0.31.0_Windows_64bit.zip" -OutFile "arduino-cli.zip"
+        Expand-Archive -Path "arduino-cli.zip" -DestinationPath "$env:GITHUB_WORKSPACE\arduino-cli"
+        $env:PATH += ";$env:GITHUB_WORKSPACE\arduino-cli"
+
+        & "$env:GITHUB_WORKSPACE\arduino-cli\arduino-cli.exe" config init
+        & "$env:GITHUB_WORKSPACE\arduino-cli\arduino-cli.exe" core update-index
+        & "$env:GITHUB_WORKSPACE\arduino-cli\arduino-cli.exe" core install arduino:avr
+
+    - name: Compile Arduino code
+      shell: pwsh
+      run: |
+        & "$env:GITHUB_WORKSPACE\arduino-cli\arduino-cli.exe" compile --fqbn arduino:avr:uno --output-dir "$env:GITHUB_WORKSPACE\Server\firmware" "$env:GITHUB_WORKSPACE\Server\firmware\firmware.ino"
+
+
+    - name: Save HEX file
+      run: |
+        mkdir -p "./ci-build/server/"
+        Copy-Item "$env:GITHUB_WORKSPACE/Server/firmware/build/arduino.avr.uno/firmware.ino.hex" -Destination "./ci-build/server/server-script-arduino-uno-r3.ino.hex"
+
+    - name: Upload Arduino Uno R3 HEX Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: server-script-arduino-uno-r3
+        path: "./ci-build/server/server-script-arduino-uno-r3.ino.hex"
