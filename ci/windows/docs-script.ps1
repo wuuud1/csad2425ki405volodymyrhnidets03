@@ -1,6 +1,6 @@
 $repoDir = (Get-Item -Path $PSScriptRoot).Parent.Parent.FullName
 $binDir = "$repoDir\bin"
-$srcDir = "$repoDir\Lab3-4\Client"
+$srcDir = "$repoDir\Lab3-5\Client"
 $docsDir = "$repoDir\ci-build\docs"
 $latexDir = "$docsDir\latex"
 $xmlDir = "$docsDir\xml"

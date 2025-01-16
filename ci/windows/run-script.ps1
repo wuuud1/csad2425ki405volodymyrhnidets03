@@ -9,9 +9,9 @@ $repoDir = (Get-Item -Path $PSScriptRoot).Parent.Parent.FullName
 $binDir = "$repoDir\bin"
 $hexOutputDir = "$repoDir\ci-build\server"
 $arduinoCliPath = "$binDir\arduino-cli.exe"
-$sketchPath = "$repoDir\Lab3-4\Server\firmware\firmware.ino"
+$sketchPath = "$repoDir\Lab3-5\Server\firmware\firmware.ino"
 $outputHexPath = "$hexOutputDir\firmware.ino.hex"
-$testProjectPath = "$repoDir\Lab3-4\Client\Client.Domain.Tests\Client.Domain.Tests.csproj"
+$testProjectPath = "$repoDir\Lab3-5\Client\Client.Domain.Tests\Client.Domain.Tests.csproj"
 $testResultsPath = "$repoDir\ci-build\test-results"
 
 Write-Host "Installing Arduino CLI..."

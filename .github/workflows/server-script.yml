@@ -1,0 +1,68 @@
+name: Client App CI
+
+on:
+  push:
+    branches: [ "feature/develop/task5" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+  pull_request:
+    branches: [ "feature/develop/task5" ]
+  workflow_dispatch:
+permissions: write-all
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  client-app-test:
+    runs-on: windows-latest
+    name: Client App Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Local CI Client Test Script
+        shell: pwsh
+        run: |
+          ./ci/windows/client-test-script.ps1
+
+      - name: Post Test Report
+        uses: bibipkins/dotnet-test-reporter@v1.4.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          comment-title: 'Test Report'
+          results-path: ./ci-build/test-results/*.trx
+  
+      - name: Upload Test Results Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: csad2425ki405volodymyrhnidets03-client-app-test-reports
+          path: ./ci-build/client-tests-results/*
+
+  build-windows:
+    runs-on: windows-latest
+    name: Windows Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Lab3-5/Client/Client.sln
+
+      - name: Build solution
+        run: dotnet build Lab3-5/Client/Client.sln --configuration Release --no-restore
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: csad2425ki405volodymyrhnidets03-client-app-windows-build
+          path: ci-build/client/*
