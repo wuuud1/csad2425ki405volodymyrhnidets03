@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="DefaultCell" UriSource="/Resources/Images/DefaultCell.png"/>
+    <BitmapImage x:Key="CrosstCell" UriSource="/Resources/Images/CrossCell.png"/>
+    <BitmapImage x:Key="ZeroCell" UriSource="/Resources/Images/ZeroCell.png"/>
+    <BitmapImage x:Key="PlayerX" UriSource="/Resources/Images/CrossPlayer.png"/>
+    <BitmapImage x:Key="PlayerO" UriSource="/Resources/Images/ZeroPlayer.png"/>
+
+</ResourceDictionary>

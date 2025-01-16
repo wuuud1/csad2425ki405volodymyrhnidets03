@@ -1,12 +1,12 @@
-name: CI task2
+name: CI task3
 
 on:
   push:
     branches:
-      - feature/develop/task2
+      - feature/develop/task3
   pull_request:
     branches:
-      - feature/develop/task2
+      - feature/develop/task3
 
 jobs:
   build:
@@ -22,13 +22,13 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore Client/Lab2csad/Lab2csad.sln
+      run: dotnet restore Lab3/Client/Client.sln
 
     - name: Build solution
-      run: dotnet build Client/Lab2csad/Lab2csad.sln --configuration Release --no-restore
+      run: dotnet build Lab3/Client/Client.sln --configuration Release --no-restore
 
     - name: Run tests
-      run: dotnet test Client/Lab2csad/InfrastructureTests/InfrastructureTests.csproj --logger "trx;LogFileName=test_results.trx" --results-directory ./TestResults --collect:"XPlat Code Coverage"
+      run: dotnet test Lab3/Client/Client.Domain.Tests/Client.Domain.Tests.csproj --logger "trx;LogFileName=test_results.trx" --results-directory ./TestResults --collect:"XPlat Code Coverage"
 
 
     - name: Upload test results
@@ -67,13 +67,15 @@ jobs:
     - name: Compile Arduino code
       shell: pwsh
       run: |
-        & "$env:GITHUB_WORKSPACE\arduino-cli\arduino-cli.exe" compile --fqbn arduino:avr:uno --output-dir "$env:GITHUB_WORKSPACE\Server\firmware" "$env:GITHUB_WORKSPACE\Server\firmware\firmware.ino"
-
+        & "$env:GITHUB_WORKSPACE\arduino-cli\arduino-cli.exe" compile --fqbn arduino:avr:uno --output-dir "$env:GITHUB_WORKSPACE\Lab3\Server\firmware" "$env:GITHUB_WORKSPACE\Lab3\Server\firmware\firmware.ino"
 
     - name: Save HEX file
+      shell: pwsh
       run: |
-        mkdir -p "./ci-build/server/"
-        Copy-Item "$env:GITHUB_WORKSPACE/Server/firmware/build/arduino.avr.uno/firmware.ino.hex" -Destination "./ci-build/server/server-script-arduino-uno-r3.ino.hex"
+        if (-Not (Test-Path "./ci-build/server/")) {
+          New-Item -ItemType Directory -Path "./ci-build/server/"
+        }
+        Copy-Item "$env:GITHUB_WORKSPACE/Lab3\Server/firmware/build/arduino.avr.uno/firmware.ino.hex" -Destination "./ci-build/server/server-script-arduino-uno-r3.ino.hex"
 
     - name: Upload Arduino Uno R3 HEX Artifact
       uses: actions/upload-artifact@v3
