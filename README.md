@@ -24,4 +24,4 @@ The following **technologies will be used** in this project
 2. Flash the Arduino Uno R3: Load the server code onto the Arduino Uno R3 using Arduino IDE.
 3. Run the game:
    * 3.1 Connect Arduino Uno R3 with loaded code.
-   * 3.2 Start the client by running Lab2csad.exe.
+   * 3.2 Start the client by running Client.exe.
